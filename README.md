@@ -16,6 +16,20 @@ An Obsidian plugin that lists every place in the current note where another note
 
 Uses only the public Obsidian API.
 
+## Usage / 使用方式
+
+1. Click the list-with-check-marks icon at the top of the right sidebar, or run **Open unlinked mentions list** from the command palette.
+   點右側欄頂端的 ✓ 清單圖示，或從指令面板執行「開啟未連結提及清單」。
+2. Open a note. The list updates automatically and shows every unlinked mention in that note, all selected.
+   打開一篇筆記，清單會自動列出這篇筆記裡所有未連結的提及，預設全部勾選。
+3. Review the list. Click the surrounding text to jump to that spot in the editor, and uncheck anything you don't want linked. For a name shared by several notes, choose the target from the dropdown first.
+   逐項檢查：點前後文可跳到編輯器中的位置確認，取消不想連結的項目。同名對應多篇筆記的項目，要先從下拉選單選擇目標。
+4. Click **建立連結 (n)** (Create links). If the note is open in an editor, press `Ctrl+Z` once to undo the whole batch.
+   按「建立連結（n）」。筆記開在編輯器中時，按一次 `Ctrl+Z` 即可全部復原。
+
+Buttons: **全選** (Select all) / **全不選** (Select none) / **建立連結** (Create links).
+按鈕：全選／全不選／建立連結。
+
 ## Installation
 
 ### Manual

@@ -1,7 +1,7 @@
 {
   "id": "unlinked-mentions-picker",
   "name": "Unlinked Mentions Picker",
-  "version": "0.1.0",
+  "version": "0.2.0",
   "minAppVersion": "1.4.10",
   "description": "List unlinked mentions of other notes in the current note, all pre-selected. Uncheck the ones you don't want and link the rest in one click. Works with CJK text.",
   "author": "LiamTsai",

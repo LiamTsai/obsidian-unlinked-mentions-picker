@@ -24,11 +24,17 @@ Uses only the public Obsidian API.
    打開一篇筆記，清單會自動列出這篇筆記裡所有未連結的提及，預設全部勾選。
 3. Review the list. Click the surrounding text to jump to that spot in the editor, and uncheck anything you don't want linked. For a name shared by several notes, choose the target from the dropdown first.
    逐項檢查：點前後文可跳到編輯器中的位置確認，取消不想連結的項目。同名對應多篇筆記的項目，要先從下拉選單選擇目標。
-4. Click **建立連結 (n)** (Create links). If the note is open in an editor, press `Ctrl+Z` once to undo the whole batch.
+4. Click **Create links (n)**. If the note is open in an editor, press `Ctrl+Z` once to undo the whole batch.
    按「建立連結（n）」。筆記開在編輯器中時，按一次 `Ctrl+Z` 即可全部復原。
 
-Buttons: **全選** (Select all) / **全不選** (Select none) / **建立連結** (Create links).
+Buttons: **Select all** / **Select none** / **Create links**.
 按鈕：全選／全不選／建立連結。
+
+## Languages / 介面語系
+
+The interface follows Obsidian's display language: English, 繁體中文 (Traditional Chinese) and 日本語 (Japanese). Any other language falls back to English.
+
+介面語言跟隨 Obsidian 的顯示語言，支援英文、繁體中文、日文；其他語系顯示英文。
 
 ## Installation
 
@@ -40,7 +46,7 @@ Buttons: **全選** (Select all) / **全不選** (Select none) / **建立連結*
 
 ## Command
 
-- **Open unlinked mentions list** (開啟未連結提及清單)
+- **Open unlinked mentions list** (開啟未連結提及清單 / 未リンクの言及リストを開く)
 
 ## License
 

@@ -3,9 +3,76 @@
 // 右側欄多一個分頁（圖示出現在側欄頂端那排按鈕），列出目前筆記裡
 // 「提到其他筆記名稱/別名、但還沒連結」的地方，預設全選，取消不要的後一次建立連結。
 
-const { Plugin, ItemView, MarkdownView, Notice, debounce, parseFrontMatterAliases } = require("obsidian");
+const obsidian = require("obsidian");
+const { Plugin, ItemView, MarkdownView, Notice, debounce, parseFrontMatterAliases } = obsidian;
 
 const VIEW_TYPE = "unlinked-mentions-picker";
+
+// ---------- 介面語系：繁中、日文、英文，其他語系一律英文 ----------
+
+const STRINGS = {
+  en: {
+    viewTitle: "Unlinked mentions",
+    commandOpen: "Open unlinked mentions list",
+    openNoteFirst: "Open a note first.",
+    summary: (name, n) => `${name} — ${n} unlinked mention${n === 1 ? "" : "s"}`,
+    selectAll: "Select all",
+    selectNone: "Select none",
+    createLinks: (n) => `Create links (${n})`,
+    noMentions: "No unlinked mentions.",
+    chooseTargetFirst: "This name matches several notes. Choose a target first.",
+    chooseTargetOption: (n) => `(${n} notes with this name — choose one)`,
+    result: (done, stale, undoable) =>
+      `Created ${done} link${done === 1 ? "" : "s"}` +
+      (stale ? ` (${stale} skipped because the note changed)` : "") +
+      (undoable ? ". Press Ctrl+Z to undo." : "."),
+  },
+  "zh-TW": {
+    viewTitle: "未連結提及",
+    commandOpen: "開啟未連結提及清單",
+    openNoteFirst: "請先開啟一篇筆記。",
+    summary: (name, n) => `${name} — ${n} 個未連結提及`,
+    selectAll: "全選",
+    selectNone: "全不選",
+    createLinks: (n) => `建立連結（${n}）`,
+    noMentions: "沒有未連結的提及。",
+    chooseTargetFirst: "這個名稱對應多篇筆記，請先選擇目標。",
+    chooseTargetOption: (n) => `（${n} 篇同名，請選擇）`,
+    result: (done, stale, undoable) =>
+      `已建立 ${done} 個連結` +
+      (stale ? `（${stale} 個因內容已變動而略過）` : "") +
+      (undoable ? "，可用 Ctrl+Z 復原。" : "。"),
+  },
+  ja: {
+    viewTitle: "未リンクの言及",
+    commandOpen: "未リンクの言及リストを開く",
+    openNoteFirst: "ノートを開いてください。",
+    summary: (name, n) => `${name} — 未リンクの言及 ${n} 件`,
+    selectAll: "すべて選択",
+    selectNone: "選択解除",
+    createLinks: (n) => `リンクを作成（${n}）`,
+    noMentions: "未リンクの言及はありません。",
+    chooseTargetFirst: "この名前は複数のノートに該当します。先にリンク先を選択してください。",
+    chooseTargetOption: (n) => `（同名のノートが ${n} 件。選択してください）`,
+    result: (done, stale, undoable) =>
+      `${done} 件のリンクを作成しました` +
+      (stale ? `（${stale} 件は内容が変更されたためスキップ）` : "") +
+      (undoable ? "。Ctrl+Z でまとめて元に戻せます。" : "。"),
+  },
+};
+
+// Obsidian 1.8.7 起有公開的 getLanguage()；舊版退回讀 localStorage 的 "language"（英文時為空）
+function detectLanguage() {
+  let lang = "";
+  try {
+    lang = typeof obsidian.getLanguage === "function"
+      ? obsidian.getLanguage()
+      : window.localStorage.getItem("language");
+  } catch (e) { /* 取不到就用英文 */ }
+  return Object.prototype.hasOwnProperty.call(STRINGS, lang) ? lang : "en";
+}
+
+const T = STRINGS[detectLanguage()];
 
 // ---------- 比對邏輯（純函式，不碰 Obsidian 物件，方便測試） ----------
 
@@ -72,7 +139,7 @@ class PickerView extends ItemView {
   }
 
   getViewType() { return VIEW_TYPE; }
-  getDisplayText() { return "未連結提及"; }
+  getDisplayText() { return T.viewTitle; }
   getIcon() { return "list-checks"; }
 
   async onOpen() {
@@ -167,24 +234,24 @@ class PickerView extends ItemView {
     const root = this.contentEl;
     root.empty();
     if (!this.file) {
-      root.createDiv({ cls: "ump-empty", text: "請先開啟一篇筆記。" });
+      root.createDiv({ cls: "ump-empty", text: T.openNoteFirst });
       return;
     }
-    root.createDiv({ cls: "ump-file", text: `${this.file.basename} — ${this.mentions.length} 個未連結提及` });
+    root.createDiv({ cls: "ump-file", text: T.summary(this.file.basename, this.mentions.length) });
 
     const bar = root.createDiv("ump-toolbar");
-    bar.createEl("button", { text: "全選" }).onclick = () => {
+    bar.createEl("button", { text: T.selectAll }).onclick = () => {
       this.selected = defaultSelection(this.mentions);
       this.mentions.forEach((m, i) => { if (this.targetOf(i) && ![...this.selected].some((j) => overlaps(m, this.mentions[j]))) this.selected.add(i); });
       this.render();
     };
-    bar.createEl("button", { text: "全不選" }).onclick = () => { this.selected.clear(); this.render(); };
-    const apply = bar.createEl("button", { cls: "mod-cta ump-apply", text: `建立連結（${this.selected.size}）` });
+    bar.createEl("button", { text: T.selectNone }).onclick = () => { this.selected.clear(); this.render(); };
+    const apply = bar.createEl("button", { cls: "mod-cta ump-apply", text: T.createLinks(this.selected.size) });
     apply.disabled = this.selected.size === 0;
     apply.onclick = () => this.apply();
 
     if (this.mentions.length === 0) {
-      root.createDiv({ cls: "ump-empty", text: "沒有未連結的提及。" });
+      root.createDiv({ cls: "ump-empty", text: T.noMentions });
       return;
     }
 
@@ -194,7 +261,7 @@ class PickerView extends ItemView {
       cb.checked = this.selected.has(i);
       cb.onchange = () => {
         if (cb.checked) {
-          if (!this.targetOf(i)) { cb.checked = false; new Notice("這個名稱對應多篇筆記，請先選擇目標。"); return; }
+          if (!this.targetOf(i)) { cb.checked = false; new Notice(T.chooseTargetFirst); return; }
           this.select(i);
         } else this.selected.delete(i);
         this.render();
@@ -206,7 +273,7 @@ class PickerView extends ItemView {
         tgt.setText("→ " + m.targets[0].path.replace(/\.md$/, ""));
       } else {
         const sel = tgt.createEl("select");
-        sel.createEl("option", { text: `（${m.targets.length} 篇同名，請選擇）`, value: "" });
+        sel.createEl("option", { text: T.chooseTargetOption(m.targets.length), value: "" });
         m.targets.forEach((f, k) => sel.createEl("option", { text: f.path, value: String(k) }));
         const cur = this.targetChoice.get(i);
         if (cur) sel.value = String(m.targets.indexOf(cur));
@@ -291,7 +358,7 @@ class PickerView extends ItemView {
         return text;
       });
     }
-    new Notice(`已建立 ${done} 個連結` + (stale ? `（${stale} 個因內容已變動而略過）` : "") + (view ? "，可用 Ctrl+Z 復原。" : "。"));
+    new Notice(T.result(done, stale, !!view));
     this.refresh();
   }
 }
@@ -311,7 +378,7 @@ module.exports = class UnlinkedMentionsPicker extends Plugin {
 
     this.addCommand({
       id: "open-unlinked-mentions-picker",
-      name: "開啟未連結提及清單",
+      name: T.commandOpen,
       callback: async () => {
         let leaf = this.app.workspace.getLeavesOfType(VIEW_TYPE)[0];
         if (!leaf) {

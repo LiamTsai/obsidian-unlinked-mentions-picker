@@ -1,0 +1,61 @@
+.ump-toolbar {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+  align-items: center;
+  padding: 4px 0 8px;
+  border-bottom: 1px solid var(--background-modifier-border);
+  margin-bottom: 6px;
+}
+.ump-toolbar .ump-apply {
+  margin-left: auto;
+}
+.ump-file {
+  font-size: var(--font-ui-small);
+  color: var(--text-muted);
+  margin-bottom: 4px;
+}
+.ump-empty {
+  color: var(--text-faint);
+  padding: 12px 0;
+}
+.ump-row {
+  display: flex;
+  gap: 8px;
+  align-items: flex-start;
+  padding: 4px 2px;
+  border-radius: var(--radius-s);
+}
+.ump-row:hover {
+  background: var(--background-modifier-hover);
+}
+.ump-row input[type="checkbox"] {
+  margin-top: 3px;
+  flex-shrink: 0;
+}
+.ump-body {
+  min-width: 0;
+  flex: 1;
+}
+.ump-target {
+  font-size: var(--font-ui-small);
+  color: var(--text-accent);
+}
+.ump-target select {
+  font-size: var(--font-ui-smaller);
+  max-width: 100%;
+}
+.ump-context {
+  font-size: var(--font-ui-smaller);
+  color: var(--text-muted);
+  cursor: pointer;
+  word-break: break-all;
+}
+.ump-context mark {
+  background: var(--text-highlight-bg);
+  color: var(--text-normal);
+}
+.ump-line {
+  color: var(--text-faint);
+  margin-right: 4px;
+}

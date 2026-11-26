@@ -1,3 +1,23 @@
+.ump-tabs {
+  display: flex;
+  gap: 4px;
+  margin-bottom: 8px;
+}
+.ump-tabs .ump-tab {
+  flex: 1;
+  font-size: var(--font-ui-small);
+}
+.ump-tabs .ump-tab.is-active {
+  background: var(--interactive-accent);
+  color: var(--text-on-accent);
+}
+.ump-group {
+  font-size: var(--font-ui-small);
+  font-weight: var(--font-semibold);
+  color: var(--text-normal);
+  margin: 8px 0 2px;
+  word-break: break-all;
+}
 .ump-toolbar {
   display: flex;
   flex-wrap: wrap;
@@ -40,6 +60,9 @@
 .ump-target {
   font-size: var(--font-ui-small);
   color: var(--text-accent);
+}
+.ump-target.ump-shadowed {
+  color: var(--text-warning);
 }
 .ump-target select {
   font-size: var(--font-ui-smaller);

@@ -4,9 +4,15 @@ An Obsidian plugin that lists every place in the current note where another note
 
 在目前筆記中，列出所有「提到其他筆記名稱或別名、但尚未連結」的地方，預設全選，取消不要的之後一鍵建立連結。
 
+It also works the other way round: the **Mentioning this note** tab lists every place in *other* notes that mentions the current note's name (or alias) without a link, so you can link them all at once.
+
+也可以反過來：切到「提及本筆記」分頁，會列出其他筆記中提到目前筆記名稱或別名、但尚未連結的地方，一次全部連結。
+
 ## Features
 
 - Adds a tab to the right sidebar (icon: list with check marks).
+- Two modes, switched at the top of the sidebar: **In this note** (mentions of other notes inside the current note) and **Mentioning this note** (mentions of the current note inside other notes, grouped by note).
+- In **Mentioning this note**, a mention that is part of a longer note name (e.g. `Tokyo` inside `Tokyo Tower` when a `Tokyo Tower` note exists) is listed but not selected by default. Links in notes open in an editor can be undone per note with `Ctrl+Z`; links in closed notes are written directly to the file.
 - Each item shows the target note, line number and surrounding text. Click the text to jump to it in the editor.
 - When mentions overlap (e.g. `Tokyo` and `Tokyo Tower`), the longer one is selected by default; checking one unchecks the other.
 - When a name matches several notes, pick the target from a dropdown before linking.
@@ -47,6 +53,7 @@ The interface follows Obsidian's display language: English, 繁體中文 (Tradit
 ## Command
 
 - **Open unlinked mentions list** (開啟未連結提及清單 / 未リンクの言及リストを開く)
+- **List unlinked mentions of this note in other notes** (列出其他筆記中提到本筆記的未連結提及 / 他のノートにあるこのノートへの未リンクの言及を表示)
 
 ## License
 
